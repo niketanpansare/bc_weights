@@ -1,9 +1,7 @@
-# Input arguments
-weights = ifdef($weights, " ")
+weights = ifdef($weights, "nike/pretrained_weights_NO_GPU_TOWERS")
 fileX = ifdef($X, " ")
-fileY = ifdef($y, " ")
-# X_full = read(fileX)
-X_full = rand(rows=10, cols=150528)
+ fileY = ifdef($y, " ")
+X_full = rand(rows=10000, cols=150528)
 
 W3 = read(weights + "/conv1_weight.mtx")
 ema_mean4 = read(weights + "/bn_conv1_weight.mtx")
@@ -334,15 +332,16 @@ source("nn/layers/softmax.dml") as softmax
 source("nn/layers/cross_entropy_loss.dml") as cross_entropy_loss
 num_images = nrow(X_full)
 normalize_input = ifdef($normalize_input, FALSE)
-# Normalize the inputs
-if(normalize_input) {
-        X_full = (X_full - rowMeans(X_full)) / rowSds(X_full)
-}
 
 y = matrix(0, rows=num_images, cols=1)
 Prob = matrix(0, rows=num_images, cols=3)
 parfor(i in 1:num_images, mode=REMOTE_SPARK, opt=CONSTRAINED) {
 	Xb = X_full[i,]
+	# Normalize the inputs
+	if(normalize_input) {
+        	Xb = (Xb - mean(Xb)) / sd(Xb)
+	}
+
 	[out3,ignore1_3,ignore2_3] = conv_builtin::forward(Xb,W3,b3,3,224,224,7,7,2,2,3,3)
 	[out4,ema_mean4_11,ema_var4_11] = batch_norm::forward(out3,ema_mean4,ema_var4,64,112,112,gamma5,beta5,0.999,1e-5,"test")
 	out5 = out4
