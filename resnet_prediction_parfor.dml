@@ -341,7 +341,7 @@ if(normalize_input) {
 
 y = matrix(0, rows=num_images, cols=1)
 Prob = matrix(0, rows=num_images, cols=3)
-parfor(i in 1:num_images, mode=REMOTE_SPARK) {
+parfor(i in 1:num_images, mode=REMOTE_SPARK, opt=CONSTRAINED) {
 	Xb = X_full[i,]
 	[out3,ignore1_3,ignore2_3] = conv_builtin::forward(Xb,W3,b3,3,224,224,7,7,2,2,3,3)
 	[out4,ema_mean4_11,ema_var4_11] = batch_norm::forward(out3,ema_mean4,ema_var4,64,112,112,gamma5,beta5,0.999,1e-5,"test")
