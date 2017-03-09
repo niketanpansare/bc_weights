@@ -1,0 +1,12 @@
+{
+    "data_type": "matrix",
+    "value_type": "double",
+    "rows": 128,
+    "cols": 1,
+    "rows_in_block": 1000,
+    "cols_in_block": 1000,
+    "nnz": 128,
+    "format": "binary",
+    "author": "MDM",
+    "created": "2017-03-08 20:31:28 PST"
+}
