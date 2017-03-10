@@ -1,4 +1,9 @@
-weights = ifdef($weights, " ")
+weights = ifdef($weights, "nike/pretrained_weights_NO_GPU_TOWERS")
+fileX = ifdef($X, " ")
+fileY = ifdef($y, " ")
+# X_full = read(fileX)
+X_full = rand(rows=10000, cols=150528)
+
 W3 = read(weights + "/conv1_weight.mtx")
 ema_mean4 = read(weights + "/bn_conv1_weight.mtx")
 gamma5 = read(weights + "/scale_conv1_weight.mtx")
@@ -326,8 +331,6 @@ source("nn/layers/max_pool_builtin.dml") as max_pool_builtin
 source("nn/layers/affine.dml") as affine
 source("nn/layers/softmax.dml") as softmax
 source("nn/layers/cross_entropy_loss.dml") as cross_entropy_loss
-#X_full = read(" ", format="csv")
-X_full = rand(rows=10, cols=150528)
 num_images = nrow(X_full)
 normalize_input = ifdef($normalize_input, FALSE)
 # Normalize the inputs
