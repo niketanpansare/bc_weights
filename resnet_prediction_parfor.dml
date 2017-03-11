@@ -574,5 +574,6 @@ parfor(i in 1:num_images) {
 	out230 = softmax::forward(out229)
 	Prob[i, ] = out230
 }
-write(y, fileY, format="csv")
+Y = y
+write(Y, fileY, format="csv")
 # print(toString(Prob))
