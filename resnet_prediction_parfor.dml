@@ -1,7 +1,8 @@
-weights = ifdef($weights, "nike/pretrained_weights_NO_GPU_TOWERS")
+weights = ifdef($weights, "pretrained_weights_NO_GPU_TOWERS")
 fileX = ifdef($X, " ")
- fileY = ifdef($y, " ")
-X_full = rand(rows=10000, cols=150528)
+fileY = ifdef($y, " ")
+X_full = read(fileX, format="csv")
+# X_full = rand(rows=1000, cols=150528)
 
 W3 = read(weights + "/conv1_weight.mtx")
 ema_mean4 = read(weights + "/bn_conv1_weight.mtx")
@@ -335,7 +336,7 @@ normalize_input = ifdef($normalize_input, FALSE)
 
 y = matrix(0, rows=num_images, cols=1)
 Prob = matrix(0, rows=num_images, cols=3)
-parfor(i in 1:num_images, mode=REMOTE_SPARK, opt=CONSTRAINED, datapartitioner=REMOTE_SPARK, log=DEBUG, taskpartitioner=FIXED, tasksize=10) {
+parfor(i in 1:num_images) {
 	Xb = X_full[i,]
 	# Normalize the inputs
 	if(normalize_input) {
@@ -572,5 +573,5 @@ parfor(i in 1:num_images, mode=REMOTE_SPARK, opt=CONSTRAINED, datapartitioner=RE
 	out230 = softmax::forward(out229)
 	Prob[i, ] = out230
 }
-# write(y, fileY, format="csv")
-print(toString(Prob))
+write(y, fileY, format="csv")
+# print(toString(Prob))
