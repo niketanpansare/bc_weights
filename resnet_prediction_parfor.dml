@@ -1,7 +1,8 @@
 weights = ifdef($weights, "pretrained_weights_NO_GPU_TOWERS")
 fileX = ifdef($X, " ")
 fileY = ifdef($y, " ")
-X_full = read(fileX, format="csv")
+X = read(fileX, format="csv")
+X_full = X
 # X_full = rand(rows=1000, cols=150528)
 
 W3 = read(weights + "/conv1_weight.mtx")
